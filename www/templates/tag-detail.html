@@ -1,0 +1,52 @@
+<ion-view view-title="{{tag.name}}">
+  <ion-content class="padding">
+    <div class="list card">
+      <div class="item item-divider">
+        <h2>Tag <b>#{{tag.pattern}}</b></h2>
+      </div>
+      <div class="item item-avatar">
+        <img ng-src="{{tag.image}}">
+        <h2>{{tag.name}}</h2>
+        <p><span class="{{tag.colour}}">{{tag.status}}</span></p>
+      </div>
+      <div class="item item-body">
+        <h3>Checked in at {{tag.checkin}} | Expiring on {{tag.expiry}}</h3>
+        <h3><span class="calm">{{tag.storage}}</span> {{tag.type}}</h3>
+        <p>{{tag.description}}</p>
+        <button class="button button-positive"><i class="icon ion-edit"></i> Edit Information</button>
+      </div>
+    </div>
+  </ion-content>
+  <!--
+  <script id="templates/tag-detail.html" type="text/ng-template">
+    <ion-modal-view view-title="{{tag.name}}">
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Edit Tag</h1>
+        <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <label class="item item-input">
+            <span class="input-label">First Name</span>
+            <input type="text">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Last Name</span>
+            <input type="text">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Email</span>
+            <input type="text">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Description</span>
+            <textarea></textarea>
+          </label>
+          </br>
+          <button class="button button-positive" ng-click="modal.hide()">Create</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+  -->
+</ion-view>

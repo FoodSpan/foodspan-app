@@ -1,0 +1,12 @@
+<ion-view view-title="Panels">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-avatar item-icon-right" ng-repeat="panel in panels" type="item-text-wrap" href="#/tab/panels/{{panel.id}}">
+        <img ng-src="{{panel.image}}">
+        <h2>{{panel.name}}</h2>
+        <p><span class="balanced">{{panel.tags}}</span> active tags | {{panel.spoiling}} tags <span class="energized">spoiling soon</span></p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

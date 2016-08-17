@@ -50,31 +50,50 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.panels', {
+    url: '/panels',
+    views: {
+      'tab-panels': {
+        templateUrl: 'templates/tab-panels.html',
+        controller: 'PanelsCtrl'
+      }
+    }
+  })
+  .state('tab.panel-detail', {
+    url: '/panels/:panelId',
+    views: {
+      'tab-panels': {
+        templateUrl: 'templates/panel-detail.html',
+        controller: 'PanelDetailCtrl'
+      }
+    }
+  })
+
+  .state('tab.tags', {
+      url: '/tags',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-tags': {
+          templateUrl: 'templates/tab-tags.html',
+          controller: 'TagsCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.tag-detail', {
+      url: '/tags/:tagId',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-tags': {
+          templateUrl: 'templates/tag-detail.html',
+          controller: 'TagDetailCtrl'
         }
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.settings', {
+    url: '/settings',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      'tab-settings': {
+        templateUrl: 'templates/tab-settings.html',
+        controller: 'SettingsCtrl'
       }
     }
   });

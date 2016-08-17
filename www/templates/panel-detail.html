@@ -1,0 +1,17 @@
+<ion-view view-title="{{panel.name}}">
+  <ion-content class="padding">
+    <div class="list card">
+      <div class="item item-divider">
+        <h2>Panel <b># {{panel.id}}</b></h2>
+      </div>
+      <div class="item item-avatar">
+        <img ng-src="{{panel.image}}">
+        <h2><span class="balanced">{{panel.tags}}</span> active tags</h2>
+        <p>{{panel.spoiling}} tags <span class="energized">spoiling soon</span></p>
+      </div>
+      <div class="item item-body">
+        <p><b>Description</b> {{panel.description}}</p>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

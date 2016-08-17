@@ -1,28 +1,53 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope, Tags) {
+  $scope.tags = Tags.all();
+})
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+.controller('PanelsCtrl', function($scope, Panels) {
+  $scope.panels = Panels.all();
+})
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
+.controller('PanelDetailCtrl', function($scope, $stateParams, Panels, $ionicModal) {
+  $scope.panel = Panels.get($stateParams.panelId);
+})
+
+.controller('TagsCtrl', function($scope, Tags) {
+  $scope.tags = Tags.all();
+})
+
+.controller('TagDetailCtrl', function($scope, $stateParams, Tags, $ionicModal) {
+  $scope.tag = Tags.get($stateParams.tagId);
+  /*
+  $ionicModal.fromTemplateUrl('templates/tag-detail.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.openModal = function() {
+    $scope.modal.show();
   };
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+  // Execute action on hide modal
+  $scope.$on('modal.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove modal
+  $scope.$on('modal.removed', function() {
+    // Execute action
+  });
+  */
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
+.controller('SettingsCtrl', function($scope) {
   $scope.settings = {
-    enableFriends: true
+    enableNotifications: true
   };
 });

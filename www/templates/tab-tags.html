@@ -1,0 +1,12 @@
+<ion-view view-title="Tags">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-avatar item-icon-right" ng-repeat="tag in tags" type="item-text-wrap" href="#/tab/tags/{{tag.id}}">
+        <img ng-src="{{tag.image}}">
+        <h2>{{tag.name}}</h2>
+        <p><span class="{{tag.colour}}">{{tag.status}}</span></p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
