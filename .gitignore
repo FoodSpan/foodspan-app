@@ -1,0 +1,13 @@
+platforms/
+plugins/
+node_modules/
+.io-config.json
+*.DS_Store
+*.swp
+*.swo
+*.log
+*.mode1v3
+*.perspectivev3
+*.pbxuser
+.tmp
+.sass-cache
