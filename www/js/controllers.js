@@ -1,5 +1,12 @@
 angular.module('starter.controllers', [])
 
+.controller('LoginCtrl', function($scope, $state) {
+  $scope.login = function(user) {
+    console.log('Log-in', user);
+    $state.go('tab.dash');
+  };
+})
+
 .controller('DashCtrl', function($scope, Tags) {
   $scope.tags = Tags.all();
 })
