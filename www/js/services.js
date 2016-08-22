@@ -2,26 +2,30 @@ angular.module('foodspan.services', [])
 
 .factory('Tags', function() {
   // the first part would make a request to the server and get back the all the rows for tags sharing the user's id
-  function parseDateString(prefix, fail, d){
+  function parseDateString(d){
     var answer = {};
     var date = new Date(d);
     var now = new Date();
     var diff = Math.floor((date.getTime()-now.getTime())/(24*60*60*1000));
     if (diff >= 1){
-      answer["text"] = prefix + " " + diff + " days";
+      answer["text"] = "spoiling in " + diff + " days";
       answer["colour"] = "balanced";
+      answer["status"] = "Fresh";
     }
     else if (diff == 1){
-      answer["text"] = prefix + " 1 day";
+      answer["text"] = "spoiling in 1 day";
       answer["colour"] = "balanced";
+      answer["status"] = "Spoiling Soon";
     }
     else if (diff > 0) {
-      answer["text"] = prefix + " " + (diff*24+1) + " hours";
+      answer["text"] = "spoiling in " + (diff*24+1) + " hours";
       answer["colour"] = "energized";
+      answer["status"] = "Spoiling Soon";
     }
     else{
-      answer["text"] = fail;
+      answer["text"] = "spoiled";
       answer["colour"] = "assertive";
+      answer["status"] = "Spoiled";
     }
     return answer;
   }
