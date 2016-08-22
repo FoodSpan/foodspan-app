@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('foodspan.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state) {
   $scope.login = function(user) {
@@ -25,7 +25,7 @@ angular.module('starter.controllers', [])
 
 .controller('TagDetailCtrl', function($scope, $stateParams, Tags, $ionicModal) {
   $scope.tag = Tags.get($stateParams.tagId);
-  /*
+  /* | MODAL CODE |
   $ionicModal.fromTemplateUrl('templates/tag-detail.html', {
     scope: $scope,
     animation: 'slide-in-up'

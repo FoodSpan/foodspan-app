@@ -1,21 +1,43 @@
-angular.module('starter.services', [])
+angular.module('foodspan.services', [])
 
 .factory('Tags', function() {
-  // Might use a resource here that returns a JSON array
-
+  // the first part would make a request to the server and get back the all the rows for tags sharing the user's id
+  function parseDateString(prefix, fail, d){
+    var answer = {};
+    var date = new Date(d);
+    var now = new Date();
+    var diff = Math.floor((date.getTime()-now.getTime())/(24*60*60*1000));
+    if (diff >= 1){
+      answer["text"] = prefix + " " + diff + " days";
+      answer["colour"] = "balanced";
+    }
+    else if (diff == 1){
+      answer["text"] = prefix + " 1 day";
+      answer["colour"] = "balanced";
+    }
+    else if (diff > 0) {
+      answer["text"] = prefix + " " + (diff*24+1) + " hours";
+      answer["colour"] = "energized";
+    }
+    else{
+      answer["text"] = fail;
+      answer["colour"] = "assertive";
+    }
+    return answer;
+  }
   // Some fake testing data
   var tags = [{
-    id: 0,
-    pattern: 42,
-    name: 'Carrots',
-    status: 'Spoiling Soon',
-    colour: 'energized',
-    checkin: '2016/08/12',
-    expiry: '2016/08/17',
-    storage: 'Refrigerated',
-    type: 'Produce',
-    description: 'No description provided.',
-    image: 'img/tag.png'
+    id: 0, // (i) in the for loop probably, we'll see
+    pattern: 42, // direct var
+    name: 'Carrots', // direct var
+    status: 'Spoiling Soon', // >1 day is fresh, 1 day to 0 is Spoiling Soon, <0 days is spoiled
+    colour: 'energized', // >1 day is balanced, 1 day to 0 is energized, <0 days is assertive
+    checkin: '2016/08/12', // in reality would be unix timestamp then needs to be converted to readable time
+    expiry: '2016/08/17', // in reality would be unix timestamp then needs to be converted to readable time
+    storage: 'Refrigerated', // direct var
+    type: 'Produce', // direct var
+    description: 'No description provided.', // direct var
+    image: 'img/tag.png' // in reality would be img/+pattern+.png
   }, {
     id: 1,
     pattern: 42,
@@ -84,16 +106,16 @@ angular.module('starter.services', [])
   };
 })
 .factory('Panels', function() {
-  // Might use a resource here that returns a JSON array
+  // the first part would make a request to the server and get back the all the rows for panels sharing the user's id
 
   // Some fake testing data
   var panels = [{
     id: 0,
-    name: 'Freezer',
-    tags: 4,
-    spoiling: 2,
-    description: 'Meats Freezer.',
-    image: 'img/logo.png'
+    name: 'Freezer', // direct var
+    tags: 4, // would count how many items in the tags factory probably, we'll see. if not, counts db rows
+    spoiling: 2, // would count tags factory. not sure how we'd do it otherwise
+    description: 'Meats Freezer.', // direct var
+    image: 'img/logo.png' // probably use a stock control panel image, we'll see
   }, {
     id: 1,
     name: 'Basement Cooler',
