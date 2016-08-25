@@ -2,12 +2,12 @@
   <ion-content class="padding">
     <div class="list card">
       <div class="item item-divider">
-        <h2>What's up, Matt?</h2>
+        <h2>What's up, {{userData.nameDisplay}}!</h2>
       </div>
       <div class="item item-avatar">
         <img src="img/logo.png">
-        <h2>It's 12:34 PM</h2>
-        <p>August 12th 2016</p>
+        <h2>It's {{date | date:'h:mm a'}}</h2>
+        <p>{{date | date:'EEEE, MMMM d, yyyy'}}</p>
       </div>
       <div class="item item-divider">
         <h2>Control Panel Information</h2>

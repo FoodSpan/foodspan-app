@@ -6,17 +6,17 @@
       </div>
       <div class="item">
         <div class="list">
-          <label class="item item-input">
-            <input type="email" placeholder="Email">
-          </label>
-          <label class="item item-input">
-            <input type="text" placeholder="Password">
-          </label>
-          <button class="button button-block button-balanced" ng-click="login('test')">
-            Sign-In
-          </button>
-          <p style="text-align:center;">Don't have an account? Register <a href="#" onclick="window.open('http://matthewwang.me/webpsan/', '_system', 'location=yes'); return false;">Here</a></p>
-        </div>
+          <form ng-submit="login()">
+            <label class="item item-input">
+              <input type="email" ng-model="loginData.email" placeholder="Email" required="">
+            </label>
+            <label class="item item-input">
+              <input type="password" ng-model="loginData.password" placeholder="Password" required="">
+            </label>
+            <button class="button button-block button-balanced" type="submit">
+              Sign-In
+            </button>
+        </form>
       </div>
     </div>
   </ion-content>

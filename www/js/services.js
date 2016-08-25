@@ -1,6 +1,73 @@
 angular.module('foodspan.services', [])
 
-.factory('Tags', function() {
+.factory('Tags', function($http) {
+
+  var tags = [];
+
+  document.addEventListener('deviceready', function() {
+
+    var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
+
+      db.transaction(function (tx) {
+
+        tx.executeSql('SELECT * FROM tag', [], function (tx, selectRes){
+
+          for (var i = 0; i < selectRes.rows.length; i++){
+
+            var parsed = parseDateString(selectRes.rows.item(i).expiry_date);
+
+            if (selectRes.rows.item(i).fridge_freezer == 0){
+              var storage = "Refrigerated";
+            } else {
+              var storage = "Frozen";
+            }
+
+            var tag = {
+              id: i,
+              actual_id: selectRes.rows.item(i).uid,
+              pattern: selectRes.rows.item(i).pattern,
+              name: selectRes.rows.item(i).name,
+              status: parsed['status'],
+              colour: parsed['colour'],
+              checkin: selectRes.rows.item(i).last_activation_date,
+              expiry: selectRes.rows.item(i).expiry_date,
+              expiry_text: parsed['text'],
+              storage: storage,
+              type: selectRes.rows.item(i).category,
+              description: selectRes.rows.item(i).description,
+              image: 'img/tag.png' // in reality would be img/+pattern+.png
+            };
+
+            tags.push(tag);
+
+            /*var tags = [{
+              id: 0, // (i) in the for loop probably, we'll see
+              pattern: 42, // direct var
+              name: 'Carrots', // direct var
+              status: 'Spoiling Soon', // >1 day is fresh, 1 day to 0 is Spoiling Soon, <0 days is spoiled
+              colour: 'energized', // >1 day is balanced, 1 day to 0 is energized, <0 days is assertive
+              checkin: '2016/08/12', // in reality would be unix timestamp then needs to be converted to readable time
+              expiry: '2016/08/17', // in reality would be unix timestamp then needs to be converted to readable time
+              storage: 'Refrigerated', // direct var
+              type: 'Produce', // direct var
+              description: 'No description provided.', // direct var
+              image: 'img/tag.png' // in reality would be img/+pattern+.png
+            }*/
+
+          }
+          console.log(JSON.stringify(tags));
+        });
+
+      }, function (error) {
+        console.log('transaction error: ' + error.message);
+      }, function () {
+        console.log('transaction ok');
+      });
+
+    }, function (error) {
+      console.log('Open database ERROR: ' + JSON.stringify(error));
+    });
+  });
   // the first part would make a request to the server and get back the all the rows for tags sharing the user's id
   function parseDateString(d){
     var answer = {};
@@ -30,7 +97,7 @@ angular.module('foodspan.services', [])
     return answer;
   }
   // Some fake testing data
-  var tags = [{
+  /*var tags = [{
     id: 0, // (i) in the for loop probably, we'll see
     pattern: 42, // direct var
     name: 'Carrots', // direct var
@@ -90,7 +157,12 @@ angular.module('foodspan.services', [])
     type: 'Produce',
     description: 'Lettuce from Farmers Market.',
     image: 'img/tag.png'
-  }];
+  }];*/
+
+  //TODO if empty
+
+  //TODO change format to match above
+
 
   return {
     all: function() {
@@ -108,6 +180,8 @@ angular.module('foodspan.services', [])
       return null;
     }
   };
+
+
 })
 .factory('Panels', function() {
   // the first part would make a request to the server and get back the all the rows for panels sharing the user's id

@@ -10,7 +10,7 @@
         <p><span class="{{tag.colour}}">{{tag.status}}</span></p>
       </div>
       <div class="item item-body">
-        <h3>Checked in at {{tag.checkin}} | Expiring on {{tag.expiry}}</h3>
+        <h3>Checked in at {{tag.checkin | date: 'd MMM yyyy'}} | Expiring on {{tag.expiry | date: 'd MMM yyyy'}}</h3>
         <h3><span class="calm">{{tag.storage}}</span> {{tag.type}}</h3>
         <p>{{tag.description}}</p>
         <button class="button button-positive"><i class="icon ion-edit"></i> Edit Information</button>
