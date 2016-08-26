@@ -2,6 +2,7 @@ platforms/
 plugins/
 node_modules/
 .io-config.json
+ionic.config.json
 *.DS_Store
 *.swp
 *.swo
