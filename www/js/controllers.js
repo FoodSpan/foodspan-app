@@ -17,7 +17,7 @@ angular.module('foodspan.controllers', [])
 
   $scope.login = function(user) {
 
-    var link = 'http://192.168.0.20:8888/endpoint.php';
+    var link = 'http://matthewwang.me/webspan/endpoint.php';
 
     var data = {
       email:$scope.loginData.email,
@@ -77,7 +77,7 @@ angular.module('foodspan.controllers', [])
 
           //SYNC
           //TODO make sync function
-          var link = 'http://192.168.0.20:8888/endpoint.php';
+          var link = 'http://matthewwang.me/webspan/endpoint.php';
 
           var data = {
             email:res.rows.item(0)['email'],
