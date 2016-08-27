@@ -17,7 +17,7 @@ angular.module('foodspan.controllers', [])
 
   $scope.login = function(user) {
 
-    var link = 'https://matthewwang.me/webspan/endpoint.php';
+    var link = 'https://www.foodspan.ca/webspan/endpoint.php';
 
     var data = {
       email:$scope.loginData.email,
