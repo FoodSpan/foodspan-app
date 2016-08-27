@@ -122,7 +122,7 @@ angular.module('foodspan.services', [])
                 var tagCount = 0;
 
                 for (var j = 0; j < tagData.length; j++){
-                  if(tagData[j]['controluid'] == 1){
+                  if(tagData[j]['controluid'] == res.rows.item(i).id){
                     tagCount++;
                   }
                 }
