@@ -98,7 +98,6 @@ angular.module('foodspan.controllers', [])
 
         $scope.$apply();
       });
-
     });
     //TODO block actions until done syncing
   });
