@@ -2,39 +2,27 @@
   <ion-content class="padding">
     <div class="list card">
       <div class="item item-divider">
-        <h2>What's up, {{userData.nameDisplay}}!</h2>
+        <h2>What's up, {{dashData.nameDisplay}}!</h2>
       </div>
       <div class="item item-avatar">
         <img src="img/logo.png">
-        <h2>It's {{date | date:'h:mm a'}}</h2>
-        <p>{{date | date:'EEEE, MMMM d, yyyy'}}</p>
+        <h2>It's {{dashData.date | date:'h:mm a'}}</h2>
+        <p>{{dashData.date | date:'EEEE, MMMM d, yyyy'}}</p>
       </div>
       <div class="item item-divider">
         <h2>Control Panel Information</h2>
       </div>
       <div class="item item-avatar">
         <img src="img/logo.png">
-        <h2><b>2</b> Active Control Panels</h2>
-        <p><b>36</b> Active Tags</p>
+        <h2><b>{{dashData.cpCount}}</b> Active Control Panels</h2>
+        <p><b>{{dashData.tagCount}}</b> Active Tags</p>
       </div>
       <div class="item item-divider">
         <h2>Tag Information</h2>
       </div>
-      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/tags">
-        <img src="img/tag.png">
-        <h2>Onions are <span class="energized">Spoiling Soon</span></h2>
-        <p>Spoiling in <b>1 Day</b></p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-      </ion-item>
-      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/tags">
-        <img src="img/tag.png">
-        <h2>Carrots are <span class="energized">Spoiling Soon</span></h2>
-        <p>Spoiling in <b>2 Days</b></p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-      </ion-item>
-      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/tags">
-        <img src="img/tag.png">
-        <h2>Lettuce are <span class="energized">Spoiling Soon</span></h2>
+      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/tags" ng-repeat = "tag in dashData.tags">
+        <img src="{{tag.image}}">
+        <h2>{{tag.name}} are <span class="energized">Spoiling Soon</span></h2>
         <p>Spoiling in <b>1 Day</b></p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
