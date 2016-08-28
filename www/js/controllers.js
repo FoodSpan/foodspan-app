@@ -61,7 +61,6 @@ angular.module('foodspan.controllers', [])
 
   document.addEventListener("offline", function(){
 
-    //TODO display no internet banner
     //TODO disable all syncing
 
     $rootScope.noInternet = true;
@@ -73,8 +72,6 @@ angular.module('foodspan.controllers', [])
   }, false);
   document.addEventListener("online", function(){
 
-    //TODO display no internet banner
-
     $rootScope.noInternet = false;
 
     $scope.$apply();
@@ -85,6 +82,7 @@ angular.module('foodspan.controllers', [])
 
   //disable back button to logout
   $ionicPlatform.registerBackButtonAction(function () {
+
   }, 100);
 
   $scope.refreshDash = function(){
@@ -202,10 +200,20 @@ angular.module('foodspan.controllers', [])
 
 })
 
-.controller('TagDetailCtrl', function($scope, $stateParams, Tags, $ionicModal) {
+.controller('TagDetailCtrl', function($scope, $rootScope, $stateParams, Tags, $ionicModal, $ionicHistory, $state) {
   Tags.get($stateParams.tagId, function (tag){
     $scope.tag = tag;
   });
+
+  //enable back button
+  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    viewData.enableBack = true;
+  });
+
+  $rootScope.$ionicGoBack = function(backCount) {
+    $state.go('tab.tags');
+};
+
   /* | MODAL CODE |
   $ionicModal.fromTemplateUrl('templates/tag-detail.html', {
     scope: $scope,
