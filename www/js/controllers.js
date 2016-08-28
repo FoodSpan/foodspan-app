@@ -17,7 +17,7 @@ angular.module('foodspan.controllers', [])
 
   $scope.login = function(user) {
 
-    var link = 'https://www.foodspan.ca/webspan/endpoint.php';
+    var link = 'http://192.168.0.20:8888/endpoint.php';
 
     var data = {
       email:$scope.loginData.email,
@@ -62,56 +62,84 @@ angular.module('foodspan.controllers', [])
 
   //TODO disable back button to logout
 
-  document.addEventListener('deviceready', function() {
+  $scope.refreshDash = function(){
 
-    $scope.dashData = {};
+    document.addEventListener('deviceready', function() {
 
-    $scope.dashData.date = new Date();
+      $scope.dashData = {};
 
-    Sync.now(function () {
+      $scope.dashData.date = new Date();
 
-      Database.getUser(function (userData) {
+        Sync.now(function () {
 
-        $scope.dashData.nameDisplay = userData.name;
-      });
+        Database.getUser(function (userData) {
 
-      Database.getPanels(function (panelData) {
+          $scope.dashData.nameDisplay = userData.name;
 
-        $scope.dashData.cpCount = panelData.length;
-      });
+          $scope.$apply();
+        });
 
-      Database.getTags(function (tagData) {
+        Database.getPanels(function (panelData) {
 
-        $scope.dashData.tagCount = tagData.length;
+          $scope.dashData.cpCount = panelData.length;
 
-        var spoilingTags = [];
+          $scope.$apply();
 
-        //display only tags that are spoiling soon
+          $scope.$broadcast('scroll.refreshComplete');
+        });
 
-        for (var i = 0; i < tagData.length; i++){
-          if (tagData[i].status === "Spoiling Soon"){
-            spoilingtags.push(tagData[i].status);
+        Database.getTags(function (tagData) {
+
+          $scope.dashData.tagCount = tagData.length;
+
+          var spoilingTags = [];
+
+          //display only tags that are spoiling soon
+
+          for (var i = 0; i < tagData.length; i++){
+            if (tagData[i].status == "Spoiling Soon"){
+              spoilingTags.push(tagData[i]);
+            }
           }
-        }
 
-        $scope.dashData.tags = spoilingTags;
+          $scope.dashData.tags = spoilingTags;
 
-        $scope.$apply();
+          $scope.$apply();
+        });
       });
     });
-    //TODO block actions until done syncing
-  });
+  }
+
+  $scope.refreshDash();
 })
 
-.controller('PanelsCtrl', function($scope, Database) {
-  console.log("PanelCtrl init");
+.controller('PanelsCtrl', function($scope, Database, Sync) {
 
-  Database.getPanels(function (panelData) {
-    $scope.panels = panelData;
+  $scope.noPanels = true;
 
-    $scope.$apply();
-    //TODO REFRESH
-  });
+  function getPanels() {
+    Database.getPanels(function (panelData) {
+
+      if (panelData.length == 0){
+        $scope.noPanels = false;
+      } else {
+        $scope.noPanels = true;
+      }
+
+      $scope.panels = panelData;
+
+      $scope.$apply();
+    });
+  }
+
+  $scope.refreshPanels = function(){
+    Sync.now(function () {
+      getPanels();
+      $scope.$broadcast('scroll.refreshComplete');
+    })
+  }
+
+  getPanels();
 })
 
 .controller('PanelDetailCtrl', function($scope, $stateParams, Panels, $ionicModal) {
@@ -120,14 +148,33 @@ angular.module('foodspan.controllers', [])
   });
 })
 
-.controller('TagsCtrl', function($scope, Database) {
+.controller('TagsCtrl', function($scope, Database, Sync) {
 
-  Database.getTags(function (tagData) {
+  $scope.noTags = true;
 
-    $scope.tags = tagData;
+  function getTags(){
+    Database.getTags(function (tagData) {
+      if (tagData.length == 0){
+        $scope.noTags = false;
+      } else {
+        $scope.noTags = true;
+      }
 
-    $scope.$apply();
-  });
+      $scope.tags = tagData;
+
+      $scope.$apply();
+    });
+  }
+
+  $scope.refreshTags = function() {
+    Sync.now(function () {
+      getTags();
+      $scope.$broadcast('scroll.refreshComplete');
+    })
+  }
+
+  getTags();
+
 })
 
 .controller('TagDetailCtrl', function($scope, $stateParams, Tags, $ionicModal) {
@@ -162,13 +209,15 @@ angular.module('foodspan.controllers', [])
   */
 })
 
-.controller('SettingsCtrl', function($scope, $state, Database) {
+.controller('SettingsCtrl', function($scope, $state, $ionicHistory, Database) {
   $scope.settings = {
     enableNotifications: true
   };
 
   $scope.logout = function() {
     Database.logout(function (){
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
       $state.go('login');
     });
   };

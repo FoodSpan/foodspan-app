@@ -1,1 +1,7 @@
 /* Empty. Add your own CSS if you like */
+.no-elements{
+  text-align:center;
+  width:100%;
+  padding-top:10px;
+  color:#C0C0C0;
+}

@@ -1,5 +1,9 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
+    <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="refreshDash()">
+    </ion-refresher>
     <div class="list card">
       <div class="item item-divider">
         <h2>What's up, {{dashData.nameDisplay}}!</h2>
@@ -20,10 +24,10 @@
       <div class="item item-divider">
         <h2>Tag Information</h2>
       </div>
-      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/tags" ng-repeat = "tag in dashData.tags">
+      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/tags/{{tag.id}}" ng-repeat = "tag in dashData.tags">
         <img src="{{tag.image}}">
-        <h2>{{tag.name}} are <span class="energized">Spoiling Soon</span></h2>
-        <p>Spoiling in <b>1 Day</b></p>
+        <h2>{{tag.name}} - <span class="energized">Spoiling Soon</span></h2>
+        <p>Spoiling in <b>{{tag.expiry_text}}</b></p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </div>

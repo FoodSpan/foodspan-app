@@ -6,23 +6,33 @@ angular.module('foodspan.services', [])
     var answer = {};
     var date = new Date(d);
     var now = new Date();
-    var diff = Math.floor((date.getTime()-now.getTime())/(24*60*60*1000));
-    if (diff >= 1){
-      answer["text"] = "spoiling in " + diff + " days";
+    var diff = (date.getTime()-now.getTime())/(24*60*60*1000);
+    if (Math.floor(diff) >= 3){
+      answer["text"] = Math.floor(diff) + " days";
       answer["colour"] = "balanced";
       answer["status"] = "Fresh";
     }
-    else if (diff == 1){
-      answer["text"] = "spoiling in 1 day";
-      answer["colour"] = "balanced";
-      answer["status"] = "Spoiling Soon";
-    }
-    else if (diff > 0) {
-      answer["text"] = "spoiling in " + (diff*24+1) + " hours";
+    else if (Math.floor(diff) > 1){
+      answer["text"] = Math.floor(diff) + " days";
       answer["colour"] = "energized";
       answer["status"] = "Spoiling Soon";
     }
-    else{
+    else if (Math.floor(diff) == 1){
+      answer["text"] = "1 day";
+      answer["colour"] = "energized";
+      answer["status"] = "Spoiling Soon";
+    }
+    else if (diff > (1/24)) {
+      answer["text"] = (Math.floor(diff*24+1)) + " hours";
+      answer["colour"] = "energized";
+      answer["status"] = "Spoiling Soon";
+    }
+    else if (diff > 0){
+      answer["text"] = "less than an hour";
+      answer["colour"] = "energized";
+      answer["status"] = "Spoiling Soon";
+    }
+    else {
       answer["text"] = "spoiled";
       answer["colour"] = "assertive";
       answer["status"] = "Spoiled";
@@ -41,13 +51,13 @@ angular.module('foodspan.services', [])
         var tags = [];
 
         if (selectRes.rows.length < 0){
-          //TODO display no tags message
+          callback([]);
           console.log('NO TAGS');
         } else {
 
           for (var i = 0; i < selectRes.rows.length; i++){
 
-            var parsed = parseDateString(selectRes.rows.item(i).expiry_date);
+            var parsed = parseDateString(selectRes.rows.item(i).expiry_date * 1000);
 
             if (selectRes.rows.item(i).fridge_freezer == 0){
               var storage = "Refrigerated";
@@ -64,7 +74,7 @@ angular.module('foodspan.services', [])
               status: parsed['status'],
               colour: parsed['colour'],
               checkin: selectRes.rows.item(i).last_activation_date,
-              expiry: selectRes.rows.item(i).expiry_date,
+              expiry: (selectRes.rows.item(i).expiry_date*1000),
               expiry_text: parsed['text'],
               storage: storage,
               type: selectRes.rows.item(i).category,
@@ -107,8 +117,7 @@ angular.module('foodspan.services', [])
           console.log('getPanels - transaction ok');
 
           if (res.rows.length < 0){
-            //TODO display no panels message
-            console.log('NO PANELS');
+            callback([]);
           } else {
 
             var panels = [];
@@ -122,7 +131,7 @@ angular.module('foodspan.services', [])
                 var tagCount = 0;
 
                 for (var j = 0; j < tagData.length; j++){
-                  if(tagData[j]['controluid'] == res.rows.item(i).id){
+                  if(tagData[j]['controluid'] == res.rows.item(i).uid){
                     tagCount++;
                   }
                 }
@@ -184,7 +193,7 @@ angular.module('foodspan.services', [])
         db.executeSql('SELECT * FROM user', [], function (res){
           //$scope.userData.nameDisplay = res.rows.item(0)['name'];
 
-          var link = 'https://www.foodspan.ca/webspan/endpoint.php';
+          var link = 'http://192.168.0.20:8888/endpoint.php';
 
           var data = {
             email:res.rows.item(0)['email'],
@@ -253,86 +262,6 @@ angular.module('foodspan.services', [])
       });
     }
   }
-
-  document.addEventListener('deviceready', function() {
-    var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
-
-      db.transaction(function (tx) {
-        tx.executeSql('SELECT * FROM user', [], function (tx, res){
-          //$scope.userData.nameDisplay = res.rows.item(0)['name'];
-
-          var link = 'http://192.168.0.20:8888/endpoint.php';
-
-          var data = {
-            email:res.rows.item(0)['email'],
-            password:res.rows.item(0)['password'],
-            a_function:"get_default",
-            parameter:"hashed"
-          }
-
-          $http.post(link, data).then(function (response){
-
-              document.addEventListener('deviceready', function() {
-                var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
-
-                  db.transaction(function (tx) {
-                    //CREATE TAG TABLE
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS tag (uid, pattern, controluid, state, last_activation_date, name, description,category, raw_cooked, fridge_freezer, ingredient, expiry_date)');
-
-                    tx.executeSql('DELETE FROM tag');
-
-                    //CREATE PANEL TABLE
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS panel (uid, accountid, version, name, description)');
-
-                    tx.executeSql('DELETE FROM panel');
-
-                  }, function (error) {
-                    console.log('transaction error: ' + error.message);
-                  }, function () {
-                    console.log('clear - transaction ok');
-                  });
-
-                  db.transaction(function (tx) {
-
-                    console.log("adding to tag database");
-
-                    for (var i = 0; i < response.data['tag'].length; i++){
-                      tx.executeSql('INSERT INTO tag (uid, pattern, controluid, state, last_activation_date, name, description,category, raw_cooked, fridge_freezer, ingredient, expiry_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                        [response.data['tag'][i]['uid'], response.data['tag'][i]['pattern'], response.data['tag'][i]['controluid'], response.data['tag'][i]['state'], response.data['tag'][i]['last_activation_date'], response.data['tag'][i]['name'],
-                          response.data['tag'][i]['description'], response.data['tag'][i]['category'], response.data['tag'][i]['raw_cooked'], response.data['tag'][i]['fridge_freezer'], response.data['tag'][i]['ingredient'], response.data['tag'][i]['expiry_date']]);
-                    }
-
-                    console.log("adding to panel database");
-
-                    for (var i = 0; i < response.data['panel'].length; i++){
-                      tx.executeSql('INSERT INTO panel (uid, accountid, version, name, description) VALUES (?,?,?,?,?)',
-                        [response.data['panel'][i]['uid'], response.data['panel'][i]['accountid'], response.data['panel'][i]['version'], response.data['panel'][i]['name'], response.data['panel'][i]['description']]);
-                    }
-
-                  }, function (error) {
-                    console.log('transaction error: ' + error.message);
-                  }, function () {
-                    console.log('insert - transaction ok');
-                  });
-
-                }, function (error) {
-                  console.log('Open database ERROR: ' + JSON.stringify(error));
-                });
-              });
-          }, (function (res){
-            console.log("sync - connection failed");
-          }));
-        });
-      }, function (error) {
-        console.log('transaction error: ' + error.message);
-      }, function () {
-        console.log('sync - transaction ok');
-      });
-
-    }, function (error) {
-      console.log('Open database ERROR: ' + JSON.stringify(error));
-    });
-  });
 })
 
 .factory('Tags', function(Database) {

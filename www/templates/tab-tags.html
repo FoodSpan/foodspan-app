@@ -1,6 +1,11 @@
 <ion-view view-title="Tags">
   <ion-content>
+  <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="refreshTags()">
+  </ion-refresher>
     <ion-list>
+      <h3 class="no-elements" ng-hide="noTags">No tags added!</h3>
       <ion-item class="item-avatar item-icon-right" ng-repeat="tag in tags" type="item-text-wrap" href="#/tab/tags/{{tag.id}}">
         <img ng-src="{{tag.image}}">
         <h2>{{tag.name}}</h2>

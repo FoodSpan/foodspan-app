@@ -1,9 +1,11 @@
 <ion-view view-title="Panels">
   <ion-content>
     <ion-refresher
-    pulling-text="Pull to refresh...">
-  </ion-refresher>
+    pulling-text="Pull to refresh..."
+    on-refresh="refreshPanels()">
+    </ion-refresher>
     <ion-list>
+      <h4 class="no-elements" ng-hide="noPanels">No panels added!</h4>
       <ion-item class="item-avatar item-icon-right" ng-repeat="panel in panels" type="item-text-wrap" href="#/tab/panels/{{panel.id}}">
         <img ng-src="{{panel.image}}">
         <h2>{{panel.name}}</h2>
