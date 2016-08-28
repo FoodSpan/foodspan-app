@@ -1,6 +1,7 @@
 angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foodspan.services'])
 
 .run(function($ionicPlatform, $state) {
+  //TODO remove login flash
   //TODO add panel
   //TODO edit tag info
   //TODO no internet handling

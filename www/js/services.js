@@ -193,7 +193,7 @@ angular.module('foodspan.services', [])
         db.executeSql('SELECT * FROM user', [], function (res){
           //$scope.userData.nameDisplay = res.rows.item(0)['name'];
 
-          var link = 'http://192.168.0.20:8888/endpoint.php';
+          var link = 'https://www.foodspan.ca/webspan/endpoint.php';
 
           var data = {
             email:res.rows.item(0)['email'],

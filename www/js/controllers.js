@@ -17,7 +17,7 @@ angular.module('foodspan.controllers', [])
 
   $scope.login = function(user) {
 
-    var link = 'http://192.168.0.20:8888/endpoint.php';
+    var link = 'https://www.foodspan.ca/webspan/endpoint.php';
 
     var data = {
       email:$scope.loginData.email,
@@ -58,9 +58,11 @@ angular.module('foodspan.controllers', [])
   };
 })
 
-.controller('DashCtrl', function(Database, Sync, $scope, $http) {
+.controller('DashCtrl', function($ionicPlatform, Database, Sync, $scope, $http) {
 
-  //TODO disable back button to logout
+  //disable back button to logout
+  $ionicPlatform.registerBackButtonAction(function () {
+}, 100);
 
   $scope.refreshDash = function(){
 
