@@ -15,6 +15,17 @@ angular.module('foodspan.controllers', [])
       });
   };
 
+  $scope.noConnectionPopup = function (){
+    var alertPopup = $ionicPopup.alert({
+         title: 'Cannot connect to server!',
+         template: 'Please verify your internet connection!'
+      });
+
+      alertPopup.then(function(res) {
+         // Custom functionality....
+      });
+  };
+
   $scope.login = function(user) {
 
     var link = 'https://www.foodspan.ca/webspan/endpoint.php';
@@ -62,7 +73,7 @@ angular.module('foodspan.controllers', [])
 
   //disable back button to logout
   $ionicPlatform.registerBackButtonAction(function () {
-}, 100);
+  }, 100);
 
   $scope.refreshDash = function(){
 
