@@ -25,5 +25,7 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-settings"></ion-nav-view>
   </ion-tab>
 
-
+  <div class="banner" ng-if="$root.noInternet">
+    <p class="banner-text">No internet connection! Sync will not work.</p>
+  </div>
 </ion-tabs>

@@ -1,6 +1,6 @@
 angular.module('foodspan.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, $http, $ionicPopup) {
+.controller('LoginCtrl', function($scope, $state, $http, $ionicPopup, Database, Sync) {
 
   $scope.loginData = {};
 
@@ -26,50 +26,62 @@ angular.module('foodspan.controllers', [])
       });
   };
 
+  Database.checkLogin(function (success){
+    console.log("checking if logged in");
+    if (success == 1){
+      $state.go('tab.dash');
+    } else if (success == 0){
+      $scope.noConnectionPopup();
+    }
+  });
+
   $scope.login = function(user) {
 
-    var link = 'https://www.foodspan.ca/webspan/endpoint.php';
-
-    var data = {
-      email:$scope.loginData.email,
-      password:$scope.loginData.password,
-      a_function:"login",
-      parameter:""
-    }
-
-    $http.post(link, data).then(function (res){
-      console.log ("server response:" + res.data['password']);
-
-      if (res.data == "bad_credentials"){
-        $scope.badLoginPopup();
-
+    Sync.login($scope.loginData.email, $scope.loginData.password, function(code){
+      if (code == 0){
+        $scope.noConnectionPopup();
+      } else if (code == 1){
+        $state.go('tab.dash');
       } else {
-        document.addEventListener('deviceready', function() {
-          var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
-
-            db.transaction(function (tx) {
-              tx.executeSql('DELETE FROM USER');
-              tx.executeSql('INSERT INTO user (email, password, name) VALUES (?, ?, ?)',
-              [$scope.loginData.email, res.data['password'], res.data['name']]);
-
-              $state.go('tab.dash');
-            }, function (error) {
-              console.log('transaction error: ' + error.message);
-            }, function () {
-              console.log('login - transaction ok');
-            });
-          }, function (error) {
-            console.log('Open database ERROR: ' + JSON.stringify(error));
-          });
-        });
+        $scope.badLoginPopup();
       }
-    }, (function (res){
-      console.log("login - connection failed");
-    }));
+    })
   };
 })
 
-.controller('DashCtrl', function($ionicPlatform, Database, Sync, $scope, $http) {
+.controller('DashCtrl', function($rootScope, $ionicPlatform, Database, Sync, $scope, $http) {
+
+  if (navigator.connection.type == Connection.NONE){
+    console.log("no connection");
+    $rootScope.noInternet = true;
+  } else {
+    console.log("yes connection");
+    $rootScope.noInternet = false;
+  }
+
+  document.addEventListener("offline", function(){
+
+    //TODO display no internet banner
+    //TODO disable all syncing
+
+    $rootScope.noInternet = true;
+
+    $scope.$apply();
+
+    console.log("lost connection");
+
+  }, false);
+  document.addEventListener("online", function(){
+
+    //TODO display no internet banner
+
+    $rootScope.noInternet = false;
+
+    $scope.$apply();
+
+    console.log("gained connection");
+
+  }, false);
 
   //disable back button to logout
   $ionicPlatform.registerBackButtonAction(function () {

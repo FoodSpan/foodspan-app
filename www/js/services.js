@@ -181,6 +181,28 @@ angular.module('foodspan.services', [])
         callback();
       });
     }
+    , checkLogin: function (callback){
+      document.addEventListener('deviceready', function() {
+        var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
+
+          db.executeSql('CREATE TABLE IF NOT EXISTS user (email, password, name)');
+          db.executeSql('SELECT * FROM user', [], function (res){
+              if (navigator.connection.type == Connection.NONE){
+                callback(0);
+              } else if (res.rows.length > 0){
+                console.log ("to dash");
+                callback(1);
+              } else {
+                callback(2);
+              }
+            }, function (error) {
+            console.log('transaction error: ' + error.message);
+          })
+        }, function (error) {
+          console.log('Open database ERROR: ' + JSON.stringify(error));
+        });
+      });
+    }
   }
 })
 
@@ -260,6 +282,47 @@ angular.module('foodspan.services', [])
       }, function (error) {
         console.log('Open database ERROR: ' + JSON.stringify(error));
       });
+    }
+    , login: function(email, password, callback){
+      var link = 'https://www.foodspan.ca/webspan/endpoint.php';
+
+      var data = {
+        email:email,
+        password:password,
+        a_function:"login",
+        parameter:""
+      }
+
+      $http.post(link, data).then(function (res){
+        console.log ("server response:" + res.data['password']);
+
+        if (res.data == "bad_credentials"){
+          callback(2);
+
+        } else {
+          document.addEventListener('deviceready', function() {
+            var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
+
+              db.transaction(function (tx) {
+                tx.executeSql('DELETE FROM USER');
+                tx.executeSql('INSERT INTO user (email, password, name) VALUES (?, ?, ?)',
+                [email, res.data['password'], res.data['name']]);
+
+                callback(1);
+              }, function (error) {
+                console.log('transaction error: ' + error.message);
+              }, function () {
+                console.log('login - transaction ok');
+              });
+            }, function (error) {
+              console.log('Open database ERROR: ' + JSON.stringify(error));
+            });
+          });
+        }
+      }, (function (res){
+        console.log("login - connection failed");
+        callback(0);
+      }));
     }
   }
 })

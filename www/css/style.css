@@ -4,3 +4,17 @@
   padding-top:10px;
   color:#C0C0C0;
 }
+
+.banner{
+    height: 20px;
+    margin-top:50px;
+    width: 100%;
+    background-color: #FFA500;
+    position:fixed;
+}
+
+.banner-text{
+  color:white;
+  text-align:center;
+  line-height:20px
+}

@@ -1,10 +1,8 @@
 angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foodspan.services'])
 
 .run(function($ionicPlatform, $state) {
-  //TODO remove login flash
   //TODO add panel
   //TODO edit tag info
-  //TODO no internet handling
   //TODO add pictures
   //TODO sorting
   //TODO remove tag
@@ -14,25 +12,6 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-    document.addEventListener('deviceready', function() {
-      var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
-
-        db.executeSql('CREATE TABLE IF NOT EXISTS user (email, password, name)');
-        db.executeSql('SELECT * FROM user', [], function (res){
-            if (res.rows.length > 0){
-              console.log ("to dash");
-              $state.go('tab.dash');
-            } else {
-              console.log ("to login");
-            }
-          }, function (error) {
-          console.log('transaction error: ' + error.message);
-        })
-      }, function (error) {
-        console.log('Open database ERROR: ' + JSON.stringify(error));
-      });
-    });
   });
 })
 
