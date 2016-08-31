@@ -26,7 +26,7 @@
       <div class="item item-divider">
         <h2>Tag Information</h2>
       </div>
-      <ion-item class="item-avatar item-icon-right" type="item-text-wrap" ng-repeat = "tag in dashData.tags" href="#/tab/tags/{{tag.id}}">
+      <ion-item class="item-avatar item-icon-right" ng-repeat="tag in dashData.tags" type="item-text-wrap" ng-click="viewTag({{tag.id}})">
         <img src="{{tag.image}}">
         <h2>{{tag.name}} - <span class="energized">Spoiling Soon</span></h2>
         <p>Spoiling in <b>{{tag.expiry_text}}</b></p>

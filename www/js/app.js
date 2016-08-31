@@ -2,6 +2,7 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
 
 .run(function($ionicPlatform, $state) {
   //TODO add panel
+  //TODO add back of panel ID code indication picture
   //TODO edit tag info
   //TODO add pictures
   //TODO sorting
@@ -47,13 +48,21 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
       }
     }
   })
-
   .state('tab.panels', {
     url: '/panels',
     views: {
       'tab-panels': {
         templateUrl: 'templates/tab-panels.html',
         controller: 'PanelsCtrl'
+      }
+    }
+  })
+  .state('tab.panel-add', {
+    url: '/panels/add',
+    views: {
+      'tab-panels': {
+        templateUrl: 'templates/panel-add.html',
+        controller: 'PanelAddCtrl'
       }
     }
   })
@@ -66,7 +75,6 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
       }
     }
   })
-
   .state('tab.tags', {
       url: '/tags',
       views: {
@@ -85,7 +93,6 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
         }
       }
     })
-
   .state('tab.settings', {
     url: '/settings',
     views: {

@@ -18,3 +18,9 @@
   text-align:center;
   line-height:20px
 }
+
+#add-button{
+  align-self:center;
+  width:100%;
+  border-style: none;
+}

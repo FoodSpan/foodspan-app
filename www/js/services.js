@@ -208,14 +208,15 @@ angular.module('foodspan.services', [])
 
 .factory('Sync', function($http) {
 
+  //var link = 'https://www.foodspan.ca/webspan/endpoint.php';
+  var link = 'http://192.168.0.20:8888/endpoint.php';
+
   return {
-    now: function (callback) {
+    now: function(callback) {
       var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
 
         db.executeSql('SELECT * FROM user', [], function (res){
           //$scope.userData.nameDisplay = res.rows.item(0)['name'];
-
-          var link = 'https://www.foodspan.ca/webspan/endpoint.php';
 
           var data = {
             email:res.rows.item(0)['email'],
@@ -284,7 +285,6 @@ angular.module('foodspan.services', [])
       });
     }
     , login: function(email, password, callback){
-      var link = 'https://www.foodspan.ca/webspan/endpoint.php';
 
       var data = {
         email:email,
@@ -323,6 +323,9 @@ angular.module('foodspan.services', [])
         console.log("login - connection failed");
         callback(0);
       }));
+    }
+    , addPanel: function() {
+
     }
   }
 })
@@ -412,6 +415,7 @@ angular.module('foodspan.services', [])
     }
   }
 })
+
 .factory('Panels', function(Database) {
 
   // Some fake testing data

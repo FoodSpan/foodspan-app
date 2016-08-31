@@ -49,7 +49,7 @@ angular.module('foodspan.controllers', [])
   };
 })
 
-.controller('DashCtrl', function($rootScope, $ionicPlatform, Database, Sync, $scope, $http) {
+.controller('DashCtrl', function($rootScope, $ionicHistory, $location, $state, $stateParams, $ionicPlatform, Database, Tags, Sync, $scope, $http) {
 
   if (navigator.connection.type == Connection.NONE){
     console.log("no connection");
@@ -84,6 +84,10 @@ angular.module('foodspan.controllers', [])
   $ionicPlatform.registerBackButtonAction(function () {
 
   }, 100);
+
+  $scope.viewTag = function(tagId){
+    $location.path('/tab/tags/' + tagId);
+  };
 
   $scope.refreshDash = function(){
 
@@ -165,6 +169,17 @@ angular.module('foodspan.controllers', [])
   getPanels();
 })
 
+.controller('PanelAddCtrl', function($scope, $state, Sync) {
+
+  $scope.addPanel = function() {
+    console.log("add panels");
+
+    $state.go('tab.panels');
+  };
+
+
+})
+
 .controller('PanelDetailCtrl', function($scope, $stateParams, Panels, $ionicModal) {
   $scope.panel = Panels.get($stateParams.panelId, function (panel){
     $scope.panel = panel;
@@ -172,6 +187,10 @@ angular.module('foodspan.controllers', [])
 })
 
 .controller('TagsCtrl', function($scope, Database, Sync) {
+
+  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    viewData.enableBack = false;
+  });
 
   $scope.noTags = true;
 
@@ -200,19 +219,42 @@ angular.module('foodspan.controllers', [])
 
 })
 
-.controller('TagDetailCtrl', function($scope, $rootScope, $stateParams, Tags, $ionicModal, $ionicHistory, $state) {
+.controller('TagDetailCtrl', function($scope, $ionicNavBarDelegate, $rootScope, $stateParams, Tags, $ionicModal, $ionicHistory, $state) {
+  $ionicNavBarDelegate.showBackButton();
   Tags.get($stateParams.tagId, function (tag){
     $scope.tag = tag;
   });
 
+    var oldSoftBack = $rootScope.$ionicGoBack;
+
+  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    viewData.enableBack = true;
+    $ionicNavBarDelegate.showBackButton(true);
+
+    $rootScope.$ionicGoBack = function() {
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
+      $state.go('tab.tags');
+    };
+  });
+
+  $scope.$on('$ionicView.leave', function (event, viewData) {
+      viewData.enableBack = true;
+      $rootScope.$ionicGoBack = oldSoftBack;
+  });
+
+/*
   //enable back button
   $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
     viewData.enableBack = true;
   });
 
   $rootScope.$ionicGoBack = function(backCount) {
+    $ionicHistory.clearHistory();
+    $ionicHistory.clearCache();
+    //$ionicNavBarDelegate.showBackButton(false);
     $state.go('tab.tags');
-};
+  };*/
 
   /* | MODAL CODE |
   $ionicModal.fromTemplateUrl('templates/tag-detail.html', {
