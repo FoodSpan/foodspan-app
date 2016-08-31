@@ -208,8 +208,8 @@ angular.module('foodspan.services', [])
 
 .factory('Sync', function($http) {
 
-  //var link = 'https://www.foodspan.ca/webspan/endpoint.php';
-  var link = 'http://192.168.0.20:8888/endpoint.php';
+  var link = 'https://www.foodspan.ca/webspan/endpoint.php';
+  //var link = 'http://192.168.0.20:8888/endpoint.php';
 
   return {
     now: function(callback) {
