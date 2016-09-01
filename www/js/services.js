@@ -40,11 +40,19 @@ angular.module('foodspan.services', [])
     return answer;
   }
 
-  function getTags(callback){
+  function getTags(panelId, callback){
 
     var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
 
-      db.executeSql('SELECT * FROM tag', [], function (selectRes){
+      //TODO get ACTUAL PP
+
+      if (panelId == null){
+        var query = 'SELECT * FROM tag';
+      } else {
+        var query = 'SELECT * FROM tag WHERE controluid = \"' + panelId + '\"';
+      }
+
+      db.executeSql(query, [], function (selectRes){
 
         console.log('getTags - transaction ok');
 
@@ -67,6 +75,7 @@ angular.module('foodspan.services', [])
 
             var tag = {
               id: i,
+              pos: selectRes.rows.item(i).pos,
               actual_id: selectRes.rows.item(i).uid,
               controluid: selectRes.rows.item(i).controluid,
               pattern: selectRes.rows.item(i).pattern,
@@ -122,7 +131,7 @@ angular.module('foodspan.services', [])
 
             var panels = [];
 
-            getTags(function (tagData) {
+            getTags(null, function (tagData) {
 
               var panelCount = 0;
 
@@ -170,8 +179,8 @@ angular.module('foodspan.services', [])
         });
       });
     }
-    , getTags: function (callback){
-      getTags(callback);
+    , getTags: function (panelId, callback){
+      getTags(panelId, callback);
     }
     , logout: function (callback){
       var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
@@ -232,7 +241,7 @@ angular.module('foodspan.services', [])
 
                   db.transaction(function (tx) {
                     //CREATE TAG TABLE
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS tag (uid, pattern, controluid, state, last_activation_date, name, description,category, raw_cooked, fridge_freezer, ingredient, expiry_date)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS tag (uid, pos, pattern, controluid, state, last_activation_date, name, description,category, raw_cooked, fridge_freezer, ingredient, expiry_date)');
 
                     tx.executeSql('DELETE FROM tag');
 
@@ -242,7 +251,7 @@ angular.module('foodspan.services', [])
                     tx.executeSql('DELETE FROM panel');
 
                   }, function (error) {
-                    console.log('transaction error: ' + error.message);
+                    console.log('clear - transaction error: ' + error.message);
                   }, function () {
                     console.log('clear - transaction ok');
                   });
@@ -252,8 +261,8 @@ angular.module('foodspan.services', [])
                     console.log("adding to tag database");
 
                     for (var i = 0; i < response.data['tag'].length; i++){
-                      tx.executeSql('INSERT INTO tag (uid, pattern, controluid, state, last_activation_date, name, description,category, raw_cooked, fridge_freezer, ingredient, expiry_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                        [response.data['tag'][i]['uid'], response.data['tag'][i]['pattern'], response.data['tag'][i]['controluid'], response.data['tag'][i]['state'], response.data['tag'][i]['last_activation_date'], response.data['tag'][i]['name'],
+                      tx.executeSql('INSERT INTO tag (uid, pos, pattern, controluid, state, last_activation_date, name, description,category, raw_cooked, fridge_freezer, ingredient, expiry_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                        [response.data['tag'][i]['uid'], i, response.data['tag'][i]['pattern'], response.data['tag'][i]['controluid'], response.data['tag'][i]['state'], response.data['tag'][i]['last_activation_date'], response.data['tag'][i]['name'],
                           response.data['tag'][i]['description'], response.data['tag'][i]['category'], response.data['tag'][i]['raw_cooked'], response.data['tag'][i]['fridge_freezer'], response.data['tag'][i]['ingredient'], response.data['tag'][i]['expiry_date']]);
                     }
 
@@ -267,7 +276,7 @@ angular.module('foodspan.services', [])
                     callback();
 
                   }, function (error) {
-                    console.log('transaction error: ' + error.message);
+                    console.log('insert - transaction error: ' + error.message);
                   }, function () {
                     console.log('insert - transaction ok');
                   });
@@ -418,14 +427,15 @@ angular.module('foodspan.services', [])
 
   return {
     remove: function(tag) {
-      Database.getTags(function (tags) {
+      Database.getTags(null, function (tags) {
         tags.splice(tags.indexOf(tag), 1);
       });
     },
     get: function(tagId, callback) {
-      Database.getTags(function (tags) {
+      Database.getTags(null, function (tags) {
+        tag = tags[tagId];
         for (var i = 0; i < tags.length; i++) {
-          if (tags[i].id === parseInt(tagId)) {
+          if (tags[i].id === tag.pos) {
             callback (tags[i]);
           }
         }

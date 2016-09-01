@@ -1,13 +1,17 @@
 angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foodspan.services'])
 
 .run(function($ionicPlatform, $state) {
+  //IMPORTANT
   //TODO add panel
   //TODO add back of panel ID code indication picture
   //TODO edit tag info
   //TODO add pictures
-  //TODO sorting
   //TODO remove tag
   //TODO remove panel
+  //NOT IMPORTANT
+  //TODO sorting
+  //TODO fix clock
+  //TODO fix redirect
   $ionicPlatform.ready(function() {
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required

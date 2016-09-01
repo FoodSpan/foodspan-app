@@ -6,7 +6,7 @@
   </ion-refresher>
     <ion-list>
       <h4 class="no-elements" ng-hide="noTags">No tags added!</h4>
-      <ion-item class="item-avatar item-icon-right" ng-repeat="tag in tags" type="item-text-wrap" href="#/tab/tags/{{tag.id}}">
+      <ion-item class="item-avatar item-icon-right" ng-repeat="tag in tags" type="item-text-wrap" href="#/tab/tags/{{tag.pos}}">
         <img ng-src="{{tag.image}}">
         <h2>{{tag.name}}</h2>
         <p><span class="{{tag.colour}}">{{tag.status}}</span></p>

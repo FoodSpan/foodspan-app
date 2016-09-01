@@ -13,5 +13,19 @@
         <p><b>Description</b> {{panel.description}}</p>
       </div>
     </div>
+    <div class="list card">
+      <div class="item item-divider">
+        <h2><b>Tags</b></h2>
+      </div>
+      <ion-list>
+        <h4 class="no-elements" ng-hide="panelNoTags">No tags added!</h4>
+        <ion-item class="item-avatar item-icon-right" ng-repeat="tag in panelTags" type="item-text-wrap" href="#/tab/tags/{{tag.pos}}">
+          <img ng-src="{{tag.image}}">
+          <h2>{{tag.name}}</h2>
+          <p><span class="{{tag.colour}}">{{tag.status}}</span></p>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </ion-item>
+      </ion-list>
+    </div>
   </ion-content>
 </ion-view>

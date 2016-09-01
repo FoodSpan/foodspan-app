@@ -115,7 +115,7 @@ angular.module('foodspan.controllers', [])
           $scope.$broadcast('scroll.refreshComplete');
         });
 
-        Database.getTags(function (tagData) {
+        Database.getTags(null, function (tagData) {
 
           $scope.dashData.tagCount = tagData.length;
 
@@ -130,6 +130,12 @@ angular.module('foodspan.controllers', [])
           }
 
           $scope.dashData.tags = spoilingTags;
+
+          if (spoilingTags.length > 0){
+            $scope.spoiling = true;
+          } else {
+            $scope.spoiling = false;
+          }
 
           $scope.$apply();
         });
@@ -180,9 +186,20 @@ angular.module('foodspan.controllers', [])
 
 })
 
-.controller('PanelDetailCtrl', function($scope, $stateParams, Panels, $ionicModal) {
+.controller('PanelDetailCtrl', function($scope, $stateParams, Panels, Tags, Database, $ionicModal) {
+
   $scope.panel = Panels.get($stateParams.panelId, function (panel){
     $scope.panel = panel;
+
+    Database.getTags($scope.panel['actual_id'], function(tagData){
+      $scope.panelTags = tagData;
+
+      if (tagData.length > 0){
+        $scope.panelNoTags = true;
+      } else {
+        $scope.panelNoTags = false;
+      }
+    });
   });
 })
 
@@ -195,7 +212,7 @@ angular.module('foodspan.controllers', [])
   $scope.noTags = true;
 
   function getTags(){
-    Database.getTags(function (tagData) {
+    Database.getTags(null, function (tagData) {
       if (tagData.length == 0){
         $scope.noTags = false;
       } else {
