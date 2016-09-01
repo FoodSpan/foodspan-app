@@ -242,46 +242,6 @@ angular.module('foodspan.controllers', [])
       viewData.enableBack = true;
       $rootScope.$ionicGoBack = oldSoftBack;
   });
-
-/*
-  //enable back button
-  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-    viewData.enableBack = true;
-  });
-
-  $rootScope.$ionicGoBack = function(backCount) {
-    $ionicHistory.clearHistory();
-    $ionicHistory.clearCache();
-    //$ionicNavBarDelegate.showBackButton(false);
-    $state.go('tab.tags');
-  };*/
-
-  /* | MODAL CODE |
-  $ionicModal.fromTemplateUrl('templates/tag-detail.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-  $scope.openModal = function() {
-    $scope.modal.show();
-  };
-  $scope.closeModal = function() {
-    $scope.modal.hide();
-  };
-  // Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-  });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
-  });
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-    // Execute action
-  });
-  */
 })
 
 .controller('SettingsCtrl', function($scope, $state, $ionicHistory, Database) {

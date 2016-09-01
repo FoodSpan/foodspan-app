@@ -73,7 +73,7 @@ angular.module('foodspan.services', [])
               name: selectRes.rows.item(i).name,
               status: parsed['status'],
               colour: parsed['colour'],
-              checkin: selectRes.rows.item(i).last_activation_date,
+              checkin: (selectRes.rows.item(i).last_activation_date*1000),
               expiry: (selectRes.rows.item(i).expiry_date*1000),
               expiry_text: parsed['text'],
               storage: storage,
@@ -324,8 +324,27 @@ angular.module('foodspan.services', [])
         callback(0);
       }));
     }
-    , addPanel: function() {
+    , addPanel: function(alphaId, callback) {
+      //TODO code, make button do this
+      var data = {
+        email:email,
+        password:password,
+        a_function:"reg_panel",
+        parameter:alphaId
+      }
 
+      $http.post(link, data).then(function (res){
+        if (res.data == "success"){
+          console.log('success');
+        } else {
+          console.log('failure');
+        }
+
+
+      }, (function (res){
+        console.log("login - connection failed");
+        callback(0);
+      }));
     }
   }
 })
