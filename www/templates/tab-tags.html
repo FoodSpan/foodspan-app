@@ -2,7 +2,7 @@
   <ion-content>
   <ion-refresher
     pulling-text="Pull to refresh..."
-    on-refresh="refreshTags()">
+    on-refresh="$root.refreshTags()">
   </ion-refresher>
     <ion-list>
       <h4 class="no-elements" ng-hide="noTags">No tags added!</h4>

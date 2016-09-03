@@ -86,9 +86,10 @@ angular.module('foodspan.services', [])
               expiry: (selectRes.rows.item(i).expiry_date*1000),
               expiry_text: parsed['text'],
               storage: storage,
+              raw_cooked: selectRes.rows.item(i).raw_cooked,
               type: selectRes.rows.item(i).category,
               description: selectRes.rows.item(i).description,
-              image: 'img/tag.png' // in reality would be img/+pattern+.png
+              image: 'img/tag_images/' + selectRes.rows.item(i).pattern + '.png' // in reality would be img/+pattern+.png
             };
 
             tags.push(tag);
@@ -217,8 +218,8 @@ angular.module('foodspan.services', [])
 
 .factory('Sync', function($http) {
 
-  var link = 'https://www.foodspan.ca/webspan/endpoint.php';
-  //var link = 'http://192.168.0.20:8888/endpoint.php';
+  //var link = 'https://www.foodspan.ca/webspan/endpoint.php';
+  var link = 'http://192.168.0.20:8888/endpoint.php';
 
   return {
     now: function(callback) {
@@ -334,26 +335,81 @@ angular.module('foodspan.services', [])
       }));
     }
     , addPanel: function(alphaId, callback) {
-      //TODO code, make button do this
-      var data = {
-        email:email,
-        password:password,
-        a_function:"reg_panel",
-        parameter:alphaId
-      }
 
-      $http.post(link, data).then(function (res){
-        if (res.data == "success"){
-          console.log('success');
-        } else {
-          console.log('failure');
+        var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
+
+        db.executeSql('SELECT * FROM user', [], function (res){
+        //TODO code, make button do this
+        var data = {
+          email:res.rows.item(0)['email'],
+          password:res.rows.item(0)['password'],
+          a_function:"reg_panel",
+          parameter:alphaId
         }
 
+        $http.post(link, data).then(function (res){
 
-      }, (function (res){
-        console.log("login - connection failed");
-        callback(0);
-      }));
+          if (res.data == "success"){
+            callback(true);
+          } else {
+            callback(false);
+          }
+
+        }, (function (res){
+          console.log("addPanel - connection failed");
+          callback(false);
+        }));
+      });
+      }, function (error) {
+        console.log('Open database ERROR: ' + JSON.stringify(error));
+      });
+    }
+    , editTag: function(tag, toDelete, callback){
+        var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
+
+          //TODO convert tag information back
+          var newTag = {
+            uid: tag.actual_id,
+            name: tag.name,
+            state: 1,
+            description: tag.description,
+            category: tag.type,
+            raw_cooked: tag.raw_cooked,
+            fridge_freezer:tag.storage,
+            expiry_date:(tag.expiry)/1000
+          }
+
+          if (toDelete){
+            newTag.state = 0;
+          }
+
+        db.executeSql('SELECT * FROM user', [], function (res){
+        //TODO code, make button do this
+        var data = {
+          email:res.rows.item(0)['email'],
+          password:res.rows.item(0)['password'],
+          a_function:"edit_tag",
+          parameter: JSON.stringify(newTag)
+        }
+
+        $http.post(link, data).then(function (res){
+          if (res.data == "success"){
+            callback(true);
+          } else {
+            callback(false);
+          }
+
+        }, (function (res){
+          console.log("editTag - connection failed");
+          callback(false);
+        }));
+      });
+      }, function (error) {
+        console.log('Open database ERROR: ' + JSON.stringify(error));
+      });
+    }
+    , deleteTag: function(callback){
+      //TODO code delete tag
     }
   }
 })

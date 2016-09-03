@@ -2,7 +2,7 @@
   <ion-content>
     <ion-refresher
     pulling-text="Pull to refresh..."
-    on-refresh="refreshPanels()">
+    on-refresh="$root.refreshPanels()">
     </ion-refresher>
     <ion-list>
       <h4 class="no-elements" ng-hide="noPanels">No panels added!</h4>

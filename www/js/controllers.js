@@ -89,7 +89,7 @@ angular.module('foodspan.controllers', [])
     $location.path('/tab/tags/' + tagId);
   };
 
-  $scope.refreshDash = function(){
+  $rootScope.refreshDash = function(){
 
     document.addEventListener('deviceready', function() {
 
@@ -146,7 +146,7 @@ angular.module('foodspan.controllers', [])
   $scope.refreshDash();
 })
 
-.controller('PanelsCtrl', function($scope, Database, Sync) {
+.controller('PanelsCtrl', function($scope, $rootScope, Database, Sync) {
 
   $scope.noPanels = true;
 
@@ -165,7 +165,7 @@ angular.module('foodspan.controllers', [])
     });
   }
 
-  $scope.refreshPanels = function(){
+  $rootScope.refreshPanels = function(){
     Sync.now(function () {
       getPanels();
       $scope.$broadcast('scroll.refreshComplete');
@@ -175,12 +175,34 @@ angular.module('foodspan.controllers', [])
   getPanels();
 })
 
-.controller('PanelAddCtrl', function($scope, $state, Sync) {
+.controller('PanelAddCtrl', function($scope, $rootScope, $ionicPopup, $state, Sync) {
+
+  $scope.badIDPopup = function (){
+    var alertPopup = $ionicPopup.alert({
+         title: 'Invalid Panel ID!',
+         template: 'Are you sure you typed it in correctly?'
+      });
+
+      alertPopup.then(function(res) {
+         // Custom functionality....
+      });
+  };
+
+  $scope.panelData = [];
 
   $scope.addPanel = function() {
     console.log("add panels");
-
-    $state.go('tab.panels');
+    Sync.addPanel($scope.panelData.alphaId, function(success){
+      if (success){
+        //TODO refresh panels
+        $rootScope.refreshPanels();
+        $state.go('tab.panels');
+      } else {
+        $scope.badIDPopup();
+        //TODO error message, try again
+        console.log("add panel failed");
+      }
+    })
   };
 
 
@@ -203,7 +225,7 @@ angular.module('foodspan.controllers', [])
   });
 })
 
-.controller('TagsCtrl', function($scope, Database, Sync) {
+.controller('TagsCtrl', function($scope, $rootScope, Database, Sync) {
 
   $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
     viewData.enableBack = false;
@@ -225,7 +247,7 @@ angular.module('foodspan.controllers', [])
     });
   }
 
-  $scope.refreshTags = function() {
+  $rootScope.refreshTags = function() {
     Sync.now(function () {
       getTags();
       $scope.$broadcast('scroll.refreshComplete');
@@ -238,6 +260,7 @@ angular.module('foodspan.controllers', [])
 
 .controller('TagDetailCtrl', function($scope, $ionicNavBarDelegate, $rootScope, $stateParams, Tags, $ionicModal, $ionicHistory, $state) {
   $ionicNavBarDelegate.showBackButton();
+
   Tags.get($stateParams.tagId, function (tag){
     $scope.tag = tag;
   });
@@ -259,6 +282,52 @@ angular.module('foodspan.controllers', [])
       viewData.enableBack = true;
       $rootScope.$ionicGoBack = oldSoftBack;
   });
+})
+
+.controller('TagEditCtrl', function($scope, $state, $rootScope, $stateParams, $ionicPopup, Tags, Sync){
+
+  $scope.uhOhPopup = function (){
+    var alertPopup = $ionicPopup.alert({
+         title: 'Uh oh!',
+         template: 'Something went wrong!'
+      });
+
+      alertPopup.then(function(res) {
+         // Custom functionality....
+      });
+  };
+
+  Tags.get($stateParams.tagId, function (tag){
+    $scope.tag = tag;
+
+    $scope.tag.raw_cooked = (tag.raw_cooked == 0) ? false: true;
+
+    $scope.tag.storage = (tag.storage == "Refrigerated") ? false: true;
+  });
+
+  $scope.editTag = function(toDelete){
+      console.log($scope.tag.expiry);
+
+      $scope.tag.raw_cooked = (!$scope.tag.raw_cooked) ? 0: 1;
+
+      $scope.tag.storage = (!$scope.tag.storage) ? 0: 1;
+
+      Sync.editTag($scope.tag, toDelete, function(success){
+        if (success){
+          try {
+            $rootScope.refreshTags();
+          } catch (err){
+            //do nothing
+          }
+          $rootScope.refreshDash();
+          //TODO REFRESH AND GO BACK TO MENU
+          $state.go('tab.tags');
+          console.log("success");
+        } else {
+          $scope.uhOhPopup();
+        }
+      });
+  };
 })
 
 .controller('SettingsCtrl', function($scope, $state, $ionicHistory, Database) {

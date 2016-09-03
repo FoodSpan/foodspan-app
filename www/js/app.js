@@ -1,17 +1,16 @@
-angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foodspan.services'])
+angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foodspan.services', 'ion-datetime-picker'])
 
 .run(function($ionicPlatform, $state) {
   //IMPORTANT
-  //TODO add panel
-  //TODO add back of panel ID code indication picture
-  //TODO edit tag info
-  //TODO add pictures
-  //TODO remove tag
+  //TODO add panel name and description
   //TODO remove panel
+  //TODO expiry date prediction
   //NOT IMPORTANT
   //TODO sorting
+  //TODO get by category?
   //TODO fix clock
   //TODO fix redirect
+  //TODO add back of panel ID code indication picture
   $ionicPlatform.ready(function() {
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -77,7 +76,8 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
         templateUrl: 'templates/panel-detail.html',
         controller: 'PanelDetailCtrl'
       }
-    }
+    },
+    cache:false
   })
   .state('tab.tags', {
       url: '/tags',
@@ -95,7 +95,18 @@ angular.module('foodspan', ['ionic', 'ngCordova', 'foodspan.controllers', 'foods
           templateUrl: 'templates/tag-detail.html',
           controller: 'TagDetailCtrl'
         }
-      }
+      },
+      cache:false
+    })
+    .state('tab.tag-edit', {
+      url: '/tags/edit/:tagId',
+      views: {
+        'tab-tags': {
+          templateUrl: 'templates/tag-edit.html',
+          controller: 'TagEditCtrl'
+        }
+      },
+      cache:false
     })
   .state('tab.settings', {
     url: '/settings',

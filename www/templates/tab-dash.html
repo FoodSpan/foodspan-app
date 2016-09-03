@@ -3,7 +3,7 @@
 
     <ion-refresher
     pulling-text="Pull to refresh..."
-    on-refresh="refreshDash()"
+    on-refresh="$root.refreshDash()"
     ng-if="!$root.noInternet">
     </ion-refresher>
     <div class="list card">

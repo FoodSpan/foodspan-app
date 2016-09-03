@@ -1,12 +1,15 @@
 <ion-view view-title="Add Panel">
   <ion-content class="padding">
     <div class="card">
-    <div class="item item-text-wrap" style="text-align:center"><b>Please enter the number located on the back of your Control Panel to register it to your account!</b></h4>
-    <img class="full-image" ng-src="img/control-panel.png">
-      <label class="item item-input">
-        <input type="text" placeholder="Control Panel Number (CASE SENSITIVE)">
-      </label>
-      <button class="button button-block button-calm" ng-click="addPanel({{tag.id}})">Add Panel</button>
+    <div class="item item-text-wrap" style="text-align:center">
+      <b>Please enter the ID Code located on the back of your Control Panel to register it to your account!</b>
+      <img class="full-image" ng-src="img/control-panel.png">
+      <form ng-submit="addPanel()">
+        <label class="item item-input">
+          <input type="text" placeholder="Control Panel ID Code (CASE SENSITIVE)" ng-model="panelData.alphaId" required="">
+        </label>
+        <button class="button button-block button-calm" type="submit">Add Panel</button>
+      </form>
     </div>
   </ion-content>
 </ion-view>

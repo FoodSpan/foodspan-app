@@ -1,0 +1,48 @@
+<ion-view view-title="Edit Tag">
+  <ion-content class="padding">
+    <div class="card">
+        <img class="padding" ng-src="{{tag.image}}" style="width:20%;margin:auto;display:block;">
+          <div class="item item-divider"></div>
+        <form>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" style="color:#D3D3D3;">Item Name</span>
+            <input type="text" placeholder="Item Name" ng-model="tag.name">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" style="color:#D3D3D3;">Category</span>
+            <input type="text" placeholder="Category" ng-model="tag.type">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" style="color:#D3D3D3;">Description</span>
+            <input type="text" placeholder="Description" ng-model="tag.description">
+          </label>
+          <div class="item item-divider"></div>
+            </form>
+            <span class="item item-toggle">Raw/Cooked
+              <label class="toggle">
+                 <input type="checkbox" ng-model="tag.raw_cooked">
+                 <div class="track">
+                   <div class="handle"></div>
+                 </div>
+              </label>
+            </span>
+            <span class="item item-toggle">Refrigerated/Frozen
+              <label class="toggle">
+                 <input type="checkbox" ng-model="tag.storage">
+                 <div class="track">
+                   <div class="handle"></div>
+                 </div>
+              </label>
+            </span>
+            <div class="item item-divider"></div>
+            <ion-item>
+              <span ion-datetime-picker am-pm ng-model="tag.expiry">
+                Click to change expiry time: <br>
+                <b>{{tag.expiry| date: "yyyy-MM-dd h:mm a"}}</b>
+              </span>
+            </ion-item>
+            <button type="submit" class="button button-calm" style="width:69%" ng-click="editTag(false)">Confirm Change</button>
+            <button type="submit" class="button button-assertive" style="width:30%" ng-click="editTag(true)">Delete Tag</button>
+      </div>
+  </ion-content>
+</ion-view>
