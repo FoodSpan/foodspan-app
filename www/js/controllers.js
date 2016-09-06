@@ -49,7 +49,7 @@ angular.module('foodspan.controllers', [])
   };
 })
 
-.controller('DashCtrl', function($rootScope, $ionicHistory, $location, $state, $stateParams, $ionicPlatform, Database, Tags, Sync, $scope, $http) {
+.controller('DashCtrl', function($rootScope, $ionicHistory, $location, $state, $stateParams, $ionicPlatform, Database, Tags, Sync, $timeout, $scope) {
 
   if (navigator.connection.type == Connection.NONE){
     console.log("no connection");
@@ -89,13 +89,18 @@ angular.module('foodspan.controllers', [])
     $location.path('/tab/tags/' + tagId);
   };
 
+  $scope.onTimeout = function() {
+        $timeout($scope.onTimeout, 1000);
+        $scope.dashData.date = new Date();
+    };
+
   $rootScope.refreshDash = function(){
 
     document.addEventListener('deviceready', function() {
 
       $scope.dashData = {};
 
-      $scope.dashData.date = new Date();
+      $timeout($scope.onTimeout, 1000);
 
         Sync.now(function () {
 
