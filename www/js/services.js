@@ -346,20 +346,27 @@ angular.module('foodspan.services', [])
         callback(0);
       }));
     }
-    , addPanel: function(alphaId, callback) {
+    , addPanel: function(alphaId, name, description, callback) {
 
         var db = window.sqlitePlugin.openDatabase({ name: 'foodspan.db', location: 'default' }, function (db) {
 
         db.executeSql('SELECT * FROM user', [], function (res){
-        //TODO code, make button do this
+
+        var panelData = {
+          alphaId:alphaId,
+          name:name,
+          description:description
+        }
         var data = {
           email:res.rows.item(0)['email'],
           password:res.rows.item(0)['password'],
           a_function:"reg_panel",
-          parameter:alphaId
+          parameter:JSON.stringify(panelData)
         }
 
         $http.post(link, data).then(function (res){
+
+          console.log(res.data);
 
           if (res.data == "success"){
             callback(true);

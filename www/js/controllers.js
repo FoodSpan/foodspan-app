@@ -192,7 +192,7 @@ angular.module('foodspan.controllers', [])
 
   $scope.addPanel = function() {
     console.log("add panels");
-    Sync.addPanel($scope.panelData.alphaId, function(success){
+    Sync.addPanel($scope.panelData.alphaId, $scope.panelData.name, $scope.panelData.description, function(success){
       if (success){
         //TODO refresh panels
         $rootScope.refreshPanels();
