@@ -73,17 +73,29 @@ angular.module('foodspan.services', [])
               var storage = "Frozen";
             }
 
+            if (selectRes.rows.item(i).name == ''){
+              var toBeName = "Tag #" + selectRes.rows.item(i).pattern;
+            } else {
+              var toBeName = selectRes.rows.item(i).name;
+            }
+
+            if (selectRes.rows.item(i).expiry_date == 0){
+              var toBeExpiry = null;
+            } else {
+              var toBeExpiry = (selectRes.rows.item(i).expiry_date*1000);
+            }
+
             var tag = {
               id: i,
               pos: selectRes.rows.item(i).pos,
               actual_id: selectRes.rows.item(i).uid,
               controluid: selectRes.rows.item(i).controluid,
               pattern: selectRes.rows.item(i).pattern,
-              name: selectRes.rows.item(i).name,
+              name: toBeName,
               status: parsed['status'],
               colour: parsed['colour'],
               checkin: (selectRes.rows.item(i).last_activation_date*1000),
-              expiry: (selectRes.rows.item(i).expiry_date*1000),
+              expiry: toBeExpiry,
               expiry_text: parsed['text'],
               storage: storage,
               raw_cooked: selectRes.rows.item(i).raw_cooked,

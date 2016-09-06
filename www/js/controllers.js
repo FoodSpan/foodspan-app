@@ -306,7 +306,6 @@ angular.module('foodspan.controllers', [])
   });
 
   $scope.editTag = function(toDelete){
-      console.log($scope.tag.expiry);
 
       $scope.tag.raw_cooked = (!$scope.tag.raw_cooked) ? 0: 1;
 
